@@ -1,0 +1,232 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesFile{archit}[29/06/2020]
+
+% Important packages
+
+\RequirePackage[a4paper, total={7in, 10in}]{geometry}
+\RequirePackage{amsmath,amsthm,amssymb}
+\RequirePackage[inline]{asymptote}
+\RequirePackage{float}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{graphicx}
+\RequirePackage{mathtools}
+\RequirePackage{comment}
+\RequirePackage{subfiles}
+\RequirePackage{hyperref}
+\RequirePackage{thmtools}
+\RequirePackage[framemethod=TikZ]{mdframed}
+\RequirePackage{harpoon}
+
+% \newif\ifarchitsexy\architsexytrue
+
+% \DeclareOption{sexy}{\architsexytrue}
+
+\ProcessOptions\relax
+
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage{nameref,cleveref}
+\PassOptionsToPackage{usenames,svgnames,dvipsnames,table}{xcolor}
+
+% % Uses sans-serif font in the entire document; including math mode
+% \ifarchitsexy
+%     \usepackage{arev}
+% \fi
+
+% Section headers
+\renewcommand*{\sectionformat}{\color{red}\maltese \thesection\enskip}
+\renewcommand*{\subsectionformat}{\color{red}\maltese \thesubsection\enskip}
+\renewcommand*{\subsubsectionformat}{\color{red}\maltese \thesubsubsection\enskip}
+
+% Colors
+\definecolor{TealBlue}{rgb}{0.21, 0.46, 0.53}
+\definecolor{MidnightBlue}{rgb}{0.1, 0.1, 0.44}
+\definecolor{Salmon}{rgb}{1.0, 0.55, 0.41}
+\definecolor{RawSienna}{rgb}{0.53, 0.18, 0.09}
+\definecolor{ForestGreen}{rgb}{0.0, 0.27, 0.13}
+
+\mdfdefinestyle{mdbluebox}{%
+	roundcorner = 10pt,
+	linewidth=1pt,
+	skipabove=12pt,
+	innerbottommargin=9pt,
+	skipbelow=2pt,
+	linecolor=blue,
+	nobreak=true,
+	backgroundcolor=TealBlue!5,
+}
+
+\declaretheoremstyle[
+	headfont=\sffamily\bfseries\color{MidnightBlue},
+	mdframed={style=mdbluebox},
+	headpunct={\\[3pt]},
+	postheadspace={0pt}
+]{thmbluebox}
+
+\mdfdefinestyle{mdredbox}{%
+	linewidth=0.5pt,
+	skipabove=12pt,
+	frametitleaboveskip=5pt,
+	frametitlebelowskip=0pt,
+	skipbelow=2pt,
+	frametitlefont=\bfseries,
+	innertopmargin=4pt,
+	innerbottommargin=8pt,
+	nobreak=true,
+	backgroundcolor=Salmon!5,
+	linecolor=RawSienna,
+}
+
+\declaretheoremstyle[
+	headfont=\bfseries\color{RawSienna},
+	mdframed={style=mdredbox},
+	headpunct={\\[3pt]},
+	postheadspace={0pt},
+]{thmredbox}
+
+\mdfdefinestyle{mdgreenbox}{%
+	skipabove=8pt,
+	linewidth=2pt,
+	rightline=false,
+	leftline=true,
+	topline=false,
+	bottomline=false,
+	linecolor=ForestGreen,
+	backgroundcolor=ForestGreen!5,
+}
+
+\declaretheoremstyle[
+	headfont=\bfseries\sffamily\color{ForestGreen!70!black},
+	bodyfont=\normalfont,
+	spaceabove=2pt,
+	spacebelow=1pt,
+	mdframed={style=mdgreenbox},
+	headpunct={ --- },
+]{thmgreenbox}
+
+\mdfdefinestyle{mdblackbox}{%
+	skipabove=8pt,
+	linewidth=3pt,
+	rightline=false,
+	leftline=true,
+	topline=false,
+	bottomline=false,
+	linecolor=black,
+	backgroundcolor=black!5!gray!5,
+}
+
+\declaretheoremstyle[
+	headfont=\bfseries,
+	bodyfont=\normalfont\small,
+	spaceabove=0pt,
+	spacebelow=0pt,
+	mdframed={style=mdblackbox}
+]{thmblackbox}
+
+\mdfdefinestyle{mdredredbox}{
+    skipabove=12pt,
+    skipbelow=12pt,
+    linewidth=2pt,
+    leftline=false,
+    rightline=false,
+    bottomline=false,
+    topline=true,
+    linecolor=red,
+    backgroundcolor=red!5!white
+}
+
+\declaretheoremstyle[
+    headfont=\bfseries,
+    bodyfont=\normalfont,
+    spaceabove=3pt,
+    spacebelow=3pt,
+    mdframed={style=mdredredbox},
+    headpunct={\\[3pt]}
+]{thmredredbox}
+
+\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=section,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
+\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
+
+\declaretheorem[style=thmbluebox,name=Lemma,sibling=theorem,refname={lemma,lemmas},Refname={Lemma,Lemmas}]{lemma}
+\declaretheorem[style=thmbluebox,name=Lemma,numbered=no]{lemma*}
+
+\declaretheorem[style=thmbluebox,name=Proposition,sibling=theorem,refname={proposition,propositions},Refname={Proposition,Propositions}]{proposition}
+\declaretheorem[style=thmbluebox,name=Proposition,numbered=no]{proposition*}
+
+\declaretheorem[style=thmbluebox,name=Corollary,sibling=theorem,refname={corollary,corollaries},Refname={Corollary,Corollaries}]{corollary}
+\declaretheorem[style=thmbluebox,name=Corollary,numbered=no]{corollary*}
+
+\declaretheorem[style=thmgreenbox,name=Claim,sibling=theorem]{claim}
+\declaretheorem[style=thmgreenbox,name=Claim,numbered=no]{claim*}
+
+\declaretheorem[style=thmblackbox,name=Remark,sibling=theorem]{remark}
+\declaretheorem[style=thmblackbox,name=Remark,numbered=no]{remark*}
+
+\declaretheorem[style=thmredbox,name=Example,sibling=theorem,refname={example,examples},Refname={Example,Examples}]{example}
+\declaretheorem[style=thmredbox,name=Example,numbered=no]{example*}
+
+\declaretheorem[style=thmblackbox,name=Exercise,sibling=theorem,refname={exercise,exercises},Refname={Exercise,Exercises}]{exercise}
+\newtheorem*{exercise*}{Exercise}
+
+\declaretheorem[style=thmbluebox,name=Problem,sibling=theorem,refname={problem,problems},Refname={Problem,Problems}]{problem}
+\newtheorem*{problem*}{Problem}
+
+% \newtheorem{definition}[theorem]{Definition}
+\declaretheorem[style=thmredredbox,name=Definition,sibling=theorem]{definition}
+\declaretheorem[style=thmredredbox,name=Definition,numbered=no]{definition*}
+
+% Solutions
+\newenvironment{solution}[1]{\vspace{-0.7cm}\paragraph{Solution#1:}}{\hfill$\square$ \medskip}
+
+% Proofs
+\renewenvironment{proof}[1]{\vspace{-0.7cm}\paragraph{Proof#1:}}{\hfill$\square$ \medskip}
+
+% Macros
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\DeclarePairedDelimiter\ang{\langle}{\rangle}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\bkt{[}{]}
+\DeclarePairedDelimiter\set{\{}{\}}
+
+\newcommand{\dang}{\measuredangle}
+\newcommand{\cycsum}{\sum_{\textrm{cyc}}}
+\newcommand{\outdeg}{\deg^{+}}
+\newcommand{\indeg}{\deg^{-}}
+\newcommand{\pre}[1]{{#1}^{\textrm{pre}}}
+
+% Math Operators
+\DeclareMathOperator{\AR}{Ar}
+\DeclareMathOperator{\SGN}{sgn}
+\DeclareMathOperator{\NE}{Ne}
+\DeclareMathOperator{\DIAM}{diam}
+\DeclareMathOperator{\PROB}{Prob}
+\DeclareMathOperator{\SPAN}{span}
+\DeclareMathOperator{\DIM}{dim}
+\DeclareMathOperator{\NULL}{null}
+\DeclareMathOperator{\RANGE}{range}
+\DeclareMathOperator{\MAT}{Mat}
+\DeclareMathOperator{\KER}{ker}
+
+\DeclareMathOperator{\RE}{Re}
+\DeclareMathOperator{\IM}{Im}
+
+% Miscellaneous Macros
+\newcommand{\gap}{\text{ }}
+\newcommand{\sgt}[1]{\overline{#1}}
+% \newcommand{\defeq}{\overset{\textrm{def}}{=}}
+\newcommand{\defeq}{=}
+\newcommand{\ttt}[1]{\texttt{#1}}
+\newcommand{\vect}[1]{\overrightharp{#1}}
+
+% To ease the usage of other math fonts
+\newcommand{\mbb}[1]{\mathbb #1}
+\newcommand{\mc}[1]{\mathcal #1}
+\newcommand{\mfk}[1]{\mathfrak #1}
+
+\newcommand{\VOCAB}[1]{\textcolor{red}{\textbf{#1}}}
+
+\newcommand{\HLINE}[1]{\begin{center}\line(1,0){#1}\end{center}}
+
+\endinput
