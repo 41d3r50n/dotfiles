@@ -1,232 +1,348 @@
+% Inspired by Evan Chen's evan.sty, see vEnhance/dotfiles/blob/master/texmf/tex/latex/evan/evan.sty
+
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
-\ProvidesFile{archit}[29/06/2020]
+\ProvidesFile{archit}[02/07/2020]
 
-% Important packages
+%%fakesection Argument Processing
 
-\RequirePackage[a4paper, total={7in, 10in}]{geometry}
-\RequirePackage{amsmath,amsthm,amssymb}
-\RequirePackage[inline]{asymptote}
-\RequirePackage{float}
-\RequirePackage[utf8]{inputenc}
-\RequirePackage{graphicx}
-\RequirePackage{mathtools}
-\RequirePackage{comment}
-\RequirePackage{subfiles}
-\RequirePackage{hyperref}
-\RequirePackage{thmtools}
-\RequirePackage[framemethod=TikZ]{mdframed}
-\RequirePackage{harpoon}
+	% Default arguments (setting everything false by default)
 
-% \newif\ifarchitsexy\architsexytrue
+	\newif\ifarchitfancythrm\architfancythrmfalse
+	\newif\ifarchitfancyprob\architfancyprobfalse
+	\newif\ifarchitfancydef\architfancydeffalse
+	\newif\ifarchitfancyclaim\architfancyclaimfalse
+	\newif\ifarchitfancylemma\architfancylemmafalse
+	\newif\ifarchitfancyex\architfancyexfalse
+	\newif\ifarchitfancyrmk\architfancyrmkfalse
+	\newif\ifarchitfancycorollary\architfancycorollaryfalse
+	\newif\ifarchitfancyprpstn\architfancyprpstnfalse
+	\newif\ifarchitfancyexer\architfancyexerfalse
 
-% \DeclareOption{sexy}{\architsexytrue}
+	\newif\ifarchithints\archithintsfalse
 
-\ProcessOptions\relax
+	\newif\ifarchitfancysechead\architfancysecheadtrue
 
-\usepackage{bm}
-\usepackage{enumitem}
-\usepackage{nameref,cleveref}
-\PassOptionsToPackage{usenames,svgnames,dvipsnames,table}{xcolor}
+	% Receive arguments
 
-% % Uses sans-serif font in the entire document; including math mode
-% \ifarchitsexy
-%     \usepackage{arev}
-% \fi
+	\DeclareOption{fancythrm}{\architfancythrmtrue}
+	\DeclareOption{fancyprob}{\architfancyprobtrue}
+	\DeclareOption{fancydef}{\architfancydeftrue}
+	\DeclareOption{fancyclaim}{\architfancyclaimtrue}
+	\DeclareOption{fancylemma}{\architfancylemmatrue}
+	\DeclareOption{fancyex}{\architfancyextrue}
+	\DeclareOption{fancycorollary}{\architfancycorollarytrue}
+	\DeclareOption{fancyprpstn}{\architfancyprpstntrue}
+	\DeclareOption{fancyexer}{\architfancyexertrue}
+	\DeclareOption{fancyrmk}{\architfancyrmktrue}
 
-% Section headers
-\renewcommand*{\sectionformat}{\color{red}\maltese \thesection\enskip}
-\renewcommand*{\subsectionformat}{\color{red}\maltese \thesubsection\enskip}
-\renewcommand*{\subsubsectionformat}{\color{red}\maltese \thesubsubsection\enskip}
+	\DeclareOption{fancyall}{
+		\architfancydeftrue
+		\architfancyprobtrue
+		\architfancythrmtrue
+		\architfancyclaimtrue
+		\architfancylemmatrue
+		\architfancyextrue
+		\architfancycorollarytrue
+		\architfancyprpstntrue
+		\architfancyexertrue
+		\architfancyrmktrue
+	}
 
-% Colors
-\definecolor{TealBlue}{rgb}{0.21, 0.46, 0.53}
-\definecolor{MidnightBlue}{rgb}{0.1, 0.1, 0.44}
-\definecolor{Salmon}{rgb}{1.0, 0.55, 0.41}
-\definecolor{RawSienna}{rgb}{0.53, 0.18, 0.09}
-\definecolor{ForestGreen}{rgb}{0.0, 0.27, 0.13}
+	\DeclareOption{nofancythrm}{\architfancythrmfalse}
+	\DeclareOption{nofancyprob}{\architfancyprobfalse}
+	\DeclareOption{nofancydef}{\architfancydeffalse}
+	\DeclareOption{nofancyclaim}{\architfancyclaimfalse}
+	\DeclareOption{nofancylemma}{\architfancylemmafalse}
+	\DeclareOption{nofancyex}{\architfancyexfalse}
+	\DeclareOption{nofancycorollary}{\architfancycorollaryfalse}
+	\DeclareOption{nofancyprpstn}{\architfancyprpstnfalse}
+	\DeclareOption{nofancyexer}{\architfancyexerfalse}
+	
+	\DeclareOption{hints}{\archithintstrue}
 
-\mdfdefinestyle{mdbluebox}{%
-	roundcorner = 10pt,
-	linewidth=1pt,
-	skipabove=12pt,
-	innerbottommargin=9pt,
-	skipbelow=2pt,
-	linecolor=blue,
-	nobreak=true,
-	backgroundcolor=TealBlue!5,
-}
+	\DeclareOption{fancysechead}{\architfancysecheadtrue}
 
-\declaretheoremstyle[
-	headfont=\sffamily\bfseries\color{MidnightBlue},
-	mdframed={style=mdbluebox},
-	headpunct={\\[3pt]},
-	postheadspace={0pt}
-]{thmbluebox}
+	\ProcessOptions\relax
 
-\mdfdefinestyle{mdredbox}{%
-	linewidth=0.5pt,
-	skipabove=12pt,
-	frametitleaboveskip=5pt,
-	frametitlebelowskip=0pt,
-	skipbelow=2pt,
-	frametitlefont=\bfseries,
-	innertopmargin=4pt,
-	innerbottommargin=8pt,
-	nobreak=true,
-	backgroundcolor=Salmon!5,
-	linecolor=RawSienna,
-}
+%%fakesection Macros And Commands
 
-\declaretheoremstyle[
-	headfont=\bfseries\color{RawSienna},
-	mdframed={style=mdredbox},
-	headpunct={\\[3pt]},
-	postheadspace={0pt},
-]{thmredbox}
+	\usepackage{amsmath,amssymb,amsthm}
+	\usepackage{mathtools}
 
-\mdfdefinestyle{mdgreenbox}{%
-	skipabove=8pt,
-	linewidth=2pt,
-	rightline=false,
-	leftline=true,
-	topline=false,
-	bottomline=false,
-	linecolor=ForestGreen,
-	backgroundcolor=ForestGreen!5,
-}
+	\usepackage{bm}
+	\usepackage{enumitem}
+	\usepackage{hyperref}
+	\usepackage{nameref,cleveref}
 
-\declaretheoremstyle[
-	headfont=\bfseries\sffamily\color{ForestGreen!70!black},
-	bodyfont=\normalfont,
-	spaceabove=2pt,
-	spacebelow=1pt,
-	mdframed={style=mdgreenbox},
-	headpunct={ --- },
-]{thmgreenbox}
 
-\mdfdefinestyle{mdblackbox}{%
-	skipabove=8pt,
-	linewidth=3pt,
-	rightline=false,
-	leftline=true,
-	topline=false,
-	bottomline=false,
-	linecolor=black,
-	backgroundcolor=black!5!gray!5,
-}
+	% Paired delimiters
 
-\declaretheoremstyle[
-	headfont=\bfseries,
-	bodyfont=\normalfont\small,
-	spaceabove=0pt,
-	spacebelow=0pt,
-	mdframed={style=mdblackbox}
-]{thmblackbox}
+	\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+	\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+	\DeclarePairedDelimiter\ang{\langle}{\rangle}
+	\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+	\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+	\DeclarePairedDelimiter\bkt{[}{]}
+	\DeclarePairedDelimiter\set{\{}{\}}
 
-\mdfdefinestyle{mdredredbox}{
-    skipabove=12pt,
-    skipbelow=12pt,
-    linewidth=2pt,
-    leftline=false,
-    rightline=false,
-    bottomline=false,
-    topline=true,
-    linecolor=red,
-    backgroundcolor=red!5!white
-}
+	% Math operators
 
-\declaretheoremstyle[
-    headfont=\bfseries,
-    bodyfont=\normalfont,
-    spaceabove=3pt,
-    spacebelow=3pt,
-    mdframed={style=mdredredbox},
-    headpunct={\\[3pt]}
-]{thmredredbox}
+	\DeclareMathOperator{\AR}{Ar}
+	\DeclareMathOperator{\SGN}{sgn}
+	\DeclareMathOperator{\NE}{Ne}
+	\DeclareMathOperator{\DIAM}{diam}
+	\DeclareMathOperator{\PROB}{Prob}
+	\DeclareMathOperator{\SPAN}{span}
+	\DeclareMathOperator{\DIM}{dim}
+	\DeclareMathOperator{\NULL}{null}
+	\DeclareMathOperator{\RANGE}{range}
+	\DeclareMathOperator{\MAT}{Mat}
+	\DeclareMathOperator{\KER}{ker}
+	\DeclareMathOperator{\RE}{Re}
+	\DeclareMathOperator{\IM}{Im}
 
-\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=section,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
-\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
+	% Other math macros
 
-\declaretheorem[style=thmbluebox,name=Lemma,sibling=theorem,refname={lemma,lemmas},Refname={Lemma,Lemmas}]{lemma}
-\declaretheorem[style=thmbluebox,name=Lemma,numbered=no]{lemma*}
+	\newcommand{\dang}{\measuredangle}
+	\newcommand{\cycsum}{\sum_{\textrm{cyc}}}
+	\newcommand{\outdeg}{\deg^{+}}
+	\newcommand{\indeg}{\deg^{-}}
+	\newcommand{\pre}[1]{{#1}^{\textrm{pre}}}
+	\newcommand{\inv}{^{-1}}
+	\newcommand{\sgt}[1]{\overline{#1}}
+	% \newcommand{\defeq}{\overset{\textrm{def}}{=}}
+	\newcommand{\defeq}{=}
+	\newcommand{\vect}[1]{\overrightharp{#1}}
 
-\declaretheorem[style=thmbluebox,name=Proposition,sibling=theorem,refname={proposition,propositions},Refname={Proposition,Propositions}]{proposition}
-\declaretheorem[style=thmbluebox,name=Proposition,numbered=no]{proposition*}
+	% To ease the usage of other math fonts
 
-\declaretheorem[style=thmbluebox,name=Corollary,sibling=theorem,refname={corollary,corollaries},Refname={Corollary,Corollaries}]{corollary}
-\declaretheorem[style=thmbluebox,name=Corollary,numbered=no]{corollary*}
+	\newcommand{\mbb}[1]{\mathbb #1}
+	\newcommand{\mc}[1]{\mathcal #1}
+	\newcommand{\mfk}[1]{\mathfrak #1}
 
-\declaretheorem[style=thmgreenbox,name=Claim,sibling=theorem]{claim}
-\declaretheorem[style=thmgreenbox,name=Claim,numbered=no]{claim*}
+	% Miscellaneous Macros
 
-\declaretheorem[style=thmblackbox,name=Remark,sibling=theorem]{remark}
-\declaretheorem[style=thmblackbox,name=Remark,numbered=no]{remark*}
+	\newcommand{\gap}{\text{ }}
+	\newcommand{\ttt}[1]{\texttt{#1}}
+	\newcommand{\VOCAB}[1]{\textcolor{red}{\textbf{#1}}}
+	\newcommand{\HLINE}[1]{\begin{center}\line(1,0){#1}\end{center}}
 
-\declaretheorem[style=thmredbox,name=Example,sibling=theorem,refname={example,examples},Refname={Example,Examples}]{example}
-\declaretheorem[style=thmredbox,name=Example,numbered=no]{example*}
+%%fakesection Main Setup
 
-\declaretheorem[style=thmblackbox,name=Exercise,sibling=theorem,refname={exercise,exercises},Refname={Exercise,Exercises}]{exercise}
-\newtheorem*{exercise*}{Exercise}
+	\usepackage{thmtools}
+	\usepackage[framemethod=TikZ]{mdframed}
 
-\declaretheorem[style=thmbluebox,name=Problem,sibling=theorem,refname={problem,problems},Refname={Problem,Problems}]{problem}
-\newtheorem*{problem*}{Problem}
+	%%fakesubsection Useful Colors
 
-% \newtheorem{definition}[theorem]{Definition}
-\declaretheorem[style=thmredredbox,name=Definition,sibling=theorem]{definition}
-\declaretheorem[style=thmredredbox,name=Definition,numbered=no]{definition*}
+		\usepackage{color, xcolor}
+		\PassOptionsToPackage{usenames,svgnames,dvipsnames,table}{xcolor}
 
-% Solutions
-\newenvironment{solution}[1]{\vspace{-0.7cm}\paragraph{Solution#1:}}{\hfill$\square$ \medskip}
+		\definecolor{TealBlue}{rgb}{0.21, 0.46, 0.53}
+		\definecolor{MidnightBlue}{rgb}{0.1, 0.1, 0.44}
+		\definecolor{Salmon}{rgb}{1.0, 0.55, 0.41}
+		\definecolor{RawSienna}{rgb}{0.53, 0.18, 0.09}
+		\definecolor{ForestGreen}{rgb}{0.0, 0.27, 0.13}
 
-% Proofs
-\renewenvironment{proof}[1]{\vspace{-0.7cm}\paragraph{Proof#1:}}{\hfill$\square$ \medskip}
+	%%fakesubsection Fancy Section Headers
+		
+		\ifarchitfancysechead
+			\renewcommand*{\sectionformat}{\color{red}\maltese \thesection\enskip}
+			\renewcommand*{\subsectionformat}{\color{red}\maltese \thesubsection\enskip}
+			\renewcommand*{\subsubsectionformat}{\color{red}\maltese \thesubsubsection\enskip}
+		\fi
 
-% Macros
-\DeclarePairedDelimiter\norm{\lVert}{\rVert}
-\DeclarePairedDelimiter\abs{\lvert}{\rvert}
-\DeclarePairedDelimiter\ang{\langle}{\rangle}
-\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
-\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
-\DeclarePairedDelimiter\bkt{[}{]}
-\DeclarePairedDelimiter\set{\{}{\}}
 
-\newcommand{\dang}{\measuredangle}
-\newcommand{\cycsum}{\sum_{\textrm{cyc}}}
-\newcommand{\outdeg}{\deg^{+}}
-\newcommand{\indeg}{\deg^{-}}
-\newcommand{\pre}[1]{{#1}^{\textrm{pre}}}
+	%%fakesubsection Defining Fancy Environments
 
-% Math Operators
-\DeclareMathOperator{\AR}{Ar}
-\DeclareMathOperator{\SGN}{sgn}
-\DeclareMathOperator{\NE}{Ne}
-\DeclareMathOperator{\DIAM}{diam}
-\DeclareMathOperator{\PROB}{Prob}
-\DeclareMathOperator{\SPAN}{span}
-\DeclareMathOperator{\DIM}{dim}
-\DeclareMathOperator{\NULL}{null}
-\DeclareMathOperator{\RANGE}{range}
-\DeclareMathOperator{\MAT}{Mat}
-\DeclareMathOperator{\KER}{ker}
+		\mdfdefinestyle{mdbluebox}{%
+			roundcorner = 10pt,
+			linewidth=1pt,
+			skipabove=12pt,
+			innerbottommargin=9pt,
+			skipbelow=2pt,
+			linecolor=blue,
+			nobreak=true,
+			backgroundcolor=TealBlue!5,
+		}
 
-\DeclareMathOperator{\RE}{Re}
-\DeclareMathOperator{\IM}{Im}
+		\declaretheoremstyle[
+			headfont=\sffamily\bfseries\color{MidnightBlue},
+			mdframed={style=mdbluebox},
+			headpunct={\\[3pt]},
+			postheadspace={0pt}
+		]{thmbluebox}
 
-% Miscellaneous Macros
-\newcommand{\gap}{\text{ }}
-\newcommand{\sgt}[1]{\overline{#1}}
-% \newcommand{\defeq}{\overset{\textrm{def}}{=}}
-\newcommand{\defeq}{=}
-\newcommand{\ttt}[1]{\texttt{#1}}
-\newcommand{\vect}[1]{\overrightharp{#1}}
+		\mdfdefinestyle{mdredbox}{%
+			linewidth=0.5pt,
+			skipabove=12pt,
+			frametitleaboveskip=5pt,
+			frametitlebelowskip=0pt,
+			skipbelow=2pt,
+			frametitlefont=\bfseries,
+			innertopmargin=4pt,
+			innerbottommargin=8pt,
+			nobreak=true,
+			backgroundcolor=Salmon!5,
+			linecolor=RawSienna,
+		}
 
-% To ease the usage of other math fonts
-\newcommand{\mbb}[1]{\mathbb #1}
-\newcommand{\mc}[1]{\mathcal #1}
-\newcommand{\mfk}[1]{\mathfrak #1}
+		\declaretheoremstyle[
+			headfont=\bfseries\color{RawSienna},
+			mdframed={style=mdredbox},
+			headpunct={\\[3pt]},
+			postheadspace={0pt},
+		]{thmredbox}
 
-\newcommand{\VOCAB}[1]{\textcolor{red}{\textbf{#1}}}
+		\mdfdefinestyle{mdgreenbox}{%
+			skipabove=8pt,
+			linewidth=2pt,
+			rightline=false,
+			leftline=true,
+			topline=false,
+			bottomline=false,
+			linecolor=ForestGreen,
+			backgroundcolor=ForestGreen!5,
+		}
 
-\newcommand{\HLINE}[1]{\begin{center}\line(1,0){#1}\end{center}}
+		\declaretheoremstyle[
+			headfont=\bfseries\sffamily\color{ForestGreen!70!black},
+			bodyfont=\normalfont,
+			spaceabove=2pt,
+			spacebelow=1pt,
+			mdframed={style=mdgreenbox},
+			headpunct={ --- },
+		]{thmgreenbox}
+
+		\mdfdefinestyle{mdblackbox}{%
+			skipabove=8pt,
+			linewidth=3pt,
+			rightline=false,
+			leftline=true,
+			topline=false,
+			bottomline=false,
+			linecolor=black,
+			backgroundcolor=black!5!gray!5,
+		}
+
+		\declaretheoremstyle[
+			headfont=\bfseries,
+			bodyfont=\normalfont\small,
+			spaceabove=0pt,
+			spacebelow=0pt,
+			mdframed={style=mdblackbox}
+		]{thmblackbox}
+
+		\mdfdefinestyle{mdredredbox}{
+			skipabove=12pt,
+			skipbelow=12pt,
+			linewidth=2pt,
+			leftline=false,
+			rightline=false,
+			bottomline=false,
+			topline=true,
+			linecolor=red,
+			backgroundcolor=red!5!white
+		}
+
+		\declaretheoremstyle[
+			headfont=\bfseries,
+			bodyfont=\normalfont,
+			spaceabove=3pt,
+			spacebelow=3pt,
+			mdframed={style=mdredredbox},
+			headpunct={\\[3pt]}
+		]{thmredredbox}
+
+	%%fakesubsection Defining Math Environments
+		
+		% Proof and solution environments
+
+			\newenvironment{solution}[1]{\vspace{-0.7cm}\paragraph{Solution#1:}}{\hfill$\square$ \medskip}
+
+			\renewenvironment{proof}[1]{\vspace{-0.7cm}\paragraph{Proof#1:}}{\hfill$\square$ \medskip}
+
+		% Theorems, lemmas, claims, definitions, corollaries, propositions, problems, examples, remarks and exercises
+
+			\ifarchitfancythrm
+				\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=section,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
+				\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
+			\else
+				\newtheorem{theorem}{Theorem}[section]
+				\newtheorem*{theorem*}{Theorem}
+			\fi
+
+			\ifarchitfancylemma
+				\declaretheorem[style=thmbluebox,name=Lemma,sibling=theorem,refname={lemma,lemmas},Refname={Lemma,Lemmas}]{lemma}
+				\declaretheorem[style=thmbluebox,name=Lemma,numbered=no]{lemma*}
+			\else
+				\newtheorem{lemma}{Lemma}[theorem]
+				\newtheorem*{lemma*}{Lemma}
+			\fi
+
+			\ifarchitfancyprob
+				\declaretheorem[style=thmbluebox,name=Problem,sibling=theorem,refname={problem,problems},Refname={Problem,Problems}]{problem}
+				\declaretheorem[style=thmbluebox,name=Problem,numbered=no]{problem*}
+			\else
+				\newtheorem{problem}{Problem}[theorem]
+				\newtheorem*{problem*}{Problem}
+			\fi
+
+
+			\ifarchitfancydef
+				\declaretheorem[style=thmredredbox,name=Definition,sibling=theorem]{definition}
+				\declaretheorem[style=thmredredbox,name=Definition,numbered=no]{definition*}
+
+			\else
+				\newtheorem{definition}{Definition}[theorem]
+			\fi
+
+			\ifarchitfancyclaim
+				\declaretheorem[style=thmgreenbox,name=Claim,sibling=theorem]{claim}
+				\declaretheorem[style=thmgreenbox,name=Claim,numbered=no]{claim*}
+
+			\else
+				\newtheorem{claim}{Claim}[theorem]
+				\newtheorem*{claim*}{Claim}
+			\fi
+
+			\ifarchitfancyex
+				\declaretheorem[style=thmredbox,name=Example,sibling=theorem,refname={example,examples},Refname={Example,Examples}]{example}
+				\declaretheorem[style=thmredbox,name=Example,numbered=no]{example*}
+
+			\else
+				\newtheorem{example}{Example}[theorem]
+				\newtheorem*{example*}{Example}
+			\fi
+
+			\ifarchitfancycorollary
+				\declaretheorem[style=thmbluebox,name=Corollary,sibling=theorem,refname={corollary,corollaries},Refname={Corollary,Corollaries}]{corollary}
+				\declaretheorem[style=thmbluebox,name=Corollary,numbered=no]{corollary*}
+			
+			\else
+				\newtheorem{corollary}{Corollary}[theorem]
+				\newtheorem*{corollary*}{Corollary}
+			\fi
+
+			\ifarchitfancyprpstn
+				\declaretheorem[style=thmbluebox,name=Proposition,sibling=theorem,refname={proposition,propositions},Refname={Proposition,Propositions}]{proposition}
+				\declaretheorem[style=thmbluebox,name=Proposition,numbered=no]{proposition*}
+			\else
+				\newtheorem{proposition}{Proposition}[theorem]
+				\newtheorem*{proposition*}{Proposition}
+			\fi
+
+			\ifarchitfancyexer
+				\declaretheorem[style=thmblackbox,name=Exercise,sibling=theorem,refname={exercise,exercises},Refname={Exercise,Exercises}]{exercise}
+			\else
+				\newtheorem{exercise}{Exercise}[theorem]
+			\fi
+
+			\ifarchitfancyrmk
+				\declaretheorem[style=thmblackbox,name=Remark,sibling=theorem]{remark}
+				\declaretheorem[style=thmblackbox,name=Remark,numbered=no]{remark*}
+			\else
+				\newtheorem{remark}{Remark}[theorem]
+				\newtheorem*{remark*}{Remark}
+			\fi
 
 \endinput
