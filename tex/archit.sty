@@ -265,7 +265,7 @@
 		% Theorems, lemmas, claims, definitions, corollaries, propositions, problems, examples, remarks and exercises
 
 			\ifarchitfancythrm
-				\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=section,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
+				\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=mathenv,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
 				\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
 			\else
 				\newtheorem{theorem}{Theorem}[section]
@@ -292,7 +292,6 @@
 			\ifarchitfancydef
 				\declaretheorem[style=thmredredbox,name=Definition,sibling=theorem]{definition}
 				\declaretheorem[style=thmredredbox,name=Definition,numbered=no]{definition*}
-
 			\else
 				\newtheorem{definition}{Definition}[theorem]
 			\fi

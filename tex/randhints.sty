@@ -1,0 +1,94 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesFile{randhints}[04/07/2020]
+
+\RequirePackage{tikz}
+\RequirePackage{pgf}
+\RequirePackage{etoolbox}
+\RequirePackage{ifthen}
+\RequirePackage{answers}
+
+% Setting up hint counters
+\newcounter{hindex}\setcounter{hindex}{0}
+\newcounter{hintcounter}\setcounter{hintcounter}{5}
+
+% Printing the hints
+
+\pgfmathsetseed{2025}
+
+
+\makeatletter
+\def\declarenumlist#1#2#3{%
+	\expandafter\edef\csname pgfmath@randomlist@#1\endcsname{#3}%
+	\count@\@ne
+	\loop
+	\expandafter\edef
+	\csname pgfmath@randomlist@#1@\the\count@\endcsname
+	  {\the\count@}
+	\ifnum\count@<#3\relax
+	\advance\count@\@ne
+	\repeat}
+
+\declarenumlist{hintlist}{1}{\value{hintcounter}}
+
+\def\prunelist#1{%
+	\expandafter\edef\csname pgfmath@randomlist@#1\endcsname
+		{\the\numexpr\csname pgfmath@randomlist@#1\endcsname-1\relax}
+	\count@\pgfmath@randomtemp
+	\loop
+	\expandafter\let
+	\csname pgfmath@randomlist@#1@\the\count@\expandafter\endcsname
+	\csname pgfmath@randomlist@#1@\the\numexpr\count@+1\relax\endcsname
+	\ifnum\count@<\csname pgfmath@randomlist@#1\endcsname\relax
+	\advance\count@\@ne
+	\repeat}
+\makeatother
+
+\expandafter\gdef\csname hintlist\thehintcounter\endcsname{text}
+
+\newcommand\gethint[1]{%
+	\item \csname hintlist#1\endcsname \label{hint:#1}
+}
+
+% \newcommand{\printhints}{
+% 	\begin{enumerate}
+% 		\small
+% 		\itemsep2pt
+% 		\setcounter{hindex}{0}%
+% 		\whiledo{\value{hindex} < \value{hintcounter}}{%
+% 			\addtocounter{hindex}{1}%
+% 			\pgfmathrandomitem\z{hintlist}
+% 			\gethint{\z}
+% 			\prunelist{hintlist}
+% 		}
+% 	\end{enumerate}
+% }
+% 
+% % Defining \addhint and \gethint
+% 
+% \newcommand\addhint[1]{%
+% 	\stepcounter{hintcounter}%
+% 	\ref{hint:\thehintcounter}%
+% 	
+% 	\expandafter\gdef\csname hintlist\thehintcounter\endcsname{#1}%
+% }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
