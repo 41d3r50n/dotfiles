@@ -20,7 +20,10 @@
 
 	\newif\ifarchithints\archithintsfalse
 
-	\newif\ifarchitfancysechead\architfancysecheadtrue
+	\newif\ifarchitsetup\architsetuptrue
+
+	\newif\ifarchitbook\architbookfalse
+	\newif\ifarchitchapnum\architchapnumfalse
 
 	% Receive arguments
 
@@ -58,9 +61,11 @@
 	\DeclareOption{nofancyprpstn}{\architfancyprpstnfalse}
 	\DeclareOption{nofancyexer}{\architfancyexerfalse}
 	
-	\DeclareOption{hints}{\archithintstrue}
+	\DeclareOption{nosetup}{\architsetupfalse}
 
-	\DeclareOption{fancysechead}{\architfancysecheadtrue}
+	% for class `scrbook`
+	\DeclareOption{book}{\architbooktrue}
+	\DeclareOption{chapnum}{\architchapnumtrue}
 
 	\ProcessOptions\relax
 
@@ -144,14 +149,20 @@
 		\definecolor{RawSienna}{rgb}{0.53, 0.18, 0.09}
 		\definecolor{ForestGreen}{rgb}{0.0, 0.27, 0.13}
 
-	%%fakesubsection Fancy Section Headers
-		
-		\ifarchitfancysechead
-			\renewcommand*{\sectionformat}{\color{red}\maltese \thesection\enskip}
-			\renewcommand*{\subsectionformat}{\color{red}\maltese \thesubsection\enskip}
-			\renewcommand*{\subsubsectionformat}{\color{red}\maltese \thesubsubsection\enskip}
-		\fi
+	%%fakesubsection Fancy Section/Chapter Headers
 
+		\renewcommand*{\sectionformat}{\color{red}\maltese \thesection \enskip} % fancy section
+		\renewcommand*{\subsectionformat}{\color{red}\maltese \thesubsection\enskip} % fancy subsection
+		\renewcommand*{\subsubsectionformat}{\color{red}\maltese \thesubsubsection\enskip} % fancy subsubsection
+
+		% taken from Napkin, fancy chapter
+		\ifarchitbook
+			\addtokomafont{chapterprefix}{\raggedleft}
+			\RedeclareSectionCommand[beforeskip=0.5em]{chapter}
+			\renewcommand*{\chapterformat}{%
+				\mbox{\scalebox{1.5}{\chapappifchapterprefix{\nobreakspace}}%
+				\scalebox{2.718}{\color{red}\thechapter\autodot}\enskip}}
+		\fi
 
 	%%fakesubsection Defining Fancy Environments
 
@@ -256,6 +267,8 @@
 
 	%%fakesubsection Defining Math Environments
 		
+		\ifarchitsetup
+
 		% Proof and solution environments
 
 			\newenvironment{solution}[1]{\vspace{-0.7cm}\paragraph{Solution#1:}}{\hfill$\square$ \medskip}
@@ -264,11 +277,17 @@
 
 		% Theorems, lemmas, claims, definitions, corollaries, propositions, problems, examples, remarks and exercises
 
+			\ifarchitchapnum
+				\newcounter{thrmcount}[chapter]
+			\else
+				\newcounter{thrmcount}[section]
+			\fi
+			
 			\ifarchitfancythrm
-				\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=mathenv,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
+				\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=thrmcount,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
 				\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
 			\else
-				\newtheorem{theorem}{Theorem}[section]
+				\newtheorem{theorem}[thrmcount]{Theorem}
 				\newtheorem*{theorem*}{Theorem}
 			\fi
 
@@ -276,7 +295,7 @@
 				\declaretheorem[style=thmbluebox,name=Lemma,sibling=theorem,refname={lemma,lemmas},Refname={Lemma,Lemmas}]{lemma}
 				\declaretheorem[style=thmbluebox,name=Lemma,numbered=no]{lemma*}
 			\else
-				\newtheorem{lemma}{Lemma}[theorem]
+				\newtheorem{lemma}[thrmcount]{Lemma}
 				\newtheorem*{lemma*}{Lemma}
 			\fi
 
@@ -284,7 +303,7 @@
 				\declaretheorem[style=thmbluebox,name=Problem,sibling=theorem,refname={problem,problems},Refname={Problem,Problems}]{problem}
 				\declaretheorem[style=thmbluebox,name=Problem,numbered=no]{problem*}
 			\else
-				\newtheorem{problem}{Problem}[theorem]
+				\newtheorem{problem}[thrmcount]{Problem}
 				\newtheorem*{problem*}{Problem}
 			\fi
 
@@ -292,8 +311,10 @@
 			\ifarchitfancydef
 				\declaretheorem[style=thmredredbox,name=Definition,sibling=theorem]{definition}
 				\declaretheorem[style=thmredredbox,name=Definition,numbered=no]{definition*}
+
 			\else
-				\newtheorem{definition}{Definition}[theorem]
+				\newtheorem{definition}[thrmcount]{Definition}
+				\newtheorem*{definition*}{Definition}
 			\fi
 
 			\ifarchitfancyclaim
@@ -301,7 +322,7 @@
 				\declaretheorem[style=thmgreenbox,name=Claim,numbered=no]{claim*}
 
 			\else
-				\newtheorem{claim}{Claim}[theorem]
+				\newtheorem{claim}[thrmcount]{Claim}
 				\newtheorem*{claim*}{Claim}
 			\fi
 
@@ -310,7 +331,7 @@
 				\declaretheorem[style=thmredbox,name=Example,numbered=no]{example*}
 
 			\else
-				\newtheorem{example}{Example}[theorem]
+				\newtheorem{example}[thrmcount]{Example}
 				\newtheorem*{example*}{Example}
 			\fi
 
@@ -319,7 +340,7 @@
 				\declaretheorem[style=thmbluebox,name=Corollary,numbered=no]{corollary*}
 			
 			\else
-				\newtheorem{corollary}{Corollary}[theorem]
+				\newtheorem{corollary}[thrmcount]{Corollary}
 				\newtheorem*{corollary*}{Corollary}
 			\fi
 
@@ -327,22 +348,24 @@
 				\declaretheorem[style=thmbluebox,name=Proposition,sibling=theorem,refname={proposition,propositions},Refname={Proposition,Propositions}]{proposition}
 				\declaretheorem[style=thmbluebox,name=Proposition,numbered=no]{proposition*}
 			\else
-				\newtheorem{proposition}{Proposition}[theorem]
+				\newtheorem{proposition}[thrmcount]{Proposition}
 				\newtheorem*{proposition*}{Proposition}
 			\fi
 
 			\ifarchitfancyexer
 				\declaretheorem[style=thmblackbox,name=Exercise,sibling=theorem,refname={exercise,exercises},Refname={Exercise,Exercises}]{exercise}
 			\else
-				\newtheorem{exercise}{Exercise}[theorem]
+				\newtheorem{exercise}[thrmcount]{Exercise}
 			\fi
 
 			\ifarchitfancyrmk
 				\declaretheorem[style=thmblackbox,name=Remark,sibling=theorem]{remark}
 				\declaretheorem[style=thmblackbox,name=Remark,numbered=no]{remark*}
 			\else
-				\newtheorem{remark}{Remark}[theorem]
+				\newtheorem{remark}[thrmcount]{Remark}
 				\newtheorem*{remark*}{Remark}
 			\fi
+
+		\fi
 
 \endinput
