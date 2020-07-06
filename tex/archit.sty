@@ -279,13 +279,20 @@
 
 			\ifarchitchapnum
 				\newcounter{thrmcount}[chapter]
+				\renewcommand{\thethrmcount}{\thechapter.\arabic{thrmcount}}
 			\else
 				\newcounter{thrmcount}[section]
+				\renewcommand{\thethrmcount}{\thesection.\arabic{thrmcount}}
 			\fi
 			
 			\ifarchitfancythrm
-				\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=thrmcount,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
-				\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
+				\ifarchitchapnum
+					\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=chapter,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
+					\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
+				\else
+					\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=section,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
+					\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
+				\fi
 			\else
 				\newtheorem{theorem}[thrmcount]{Theorem}
 				\newtheorem*{theorem*}{Theorem}
@@ -303,6 +310,7 @@
 				\declaretheorem[style=thmbluebox,name=Problem,sibling=theorem,refname={problem,problems},Refname={Problem,Problems}]{problem}
 				\declaretheorem[style=thmbluebox,name=Problem,numbered=no]{problem*}
 			\else
+				\theoremstyle{definition}
 				\newtheorem{problem}[thrmcount]{Problem}
 				\newtheorem*{problem*}{Problem}
 			\fi
@@ -313,6 +321,7 @@
 				\declaretheorem[style=thmredredbox,name=Definition,numbered=no]{definition*}
 
 			\else
+				\theoremstyle{definition}
 				\newtheorem{definition}[thrmcount]{Definition}
 				\newtheorem*{definition*}{Definition}
 			\fi
@@ -322,6 +331,7 @@
 				\declaretheorem[style=thmgreenbox,name=Claim,numbered=no]{claim*}
 
 			\else
+				\theoremstyle{plain}
 				\newtheorem{claim}[thrmcount]{Claim}
 				\newtheorem*{claim*}{Claim}
 			\fi
