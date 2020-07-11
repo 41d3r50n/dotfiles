@@ -25,6 +25,8 @@
 	\newif\ifarchitbook\architbookfalse
 	\newif\ifarchitchapnum\architchapnumfalse
 
+	\newif\ifarchitthrmprbsepnum\architthrmprbsepnumfalse
+
 	% Receive arguments
 
 	\DeclareOption{fancythrm}{\architfancythrmtrue}
@@ -51,6 +53,19 @@
 		\architfancyrmktrue
 	}
 
+	\DeclareOption{fancystd}{
+		\architfancydeffalse
+		\architfancyprobtrue
+		\architfancythrmtrue
+		\architfancyclaimtrue
+		\architfancylemmatrue
+		\architfancyextrue
+		\architfancycorollaryfalse
+		\architfancyprpstntrue
+		\architfancyexerfalse
+		\architfancyrmktrue
+	}
+
 	\DeclareOption{nofancythrm}{\architfancythrmfalse}
 	\DeclareOption{nofancyprob}{\architfancyprobfalse}
 	\DeclareOption{nofancydef}{\architfancydeffalse}
@@ -63,6 +78,7 @@
 	
 	\DeclareOption{nosetup}{\architsetupfalse}
 
+	\DeclareOption{thrmprbsep}{\architthrmprbsepnumtrue}
 	% for class `scrbook`
 	\DeclareOption{book}{\architbooktrue}
 	\DeclareOption{chapnum}{\architchapnumtrue}
@@ -118,6 +134,7 @@
 	% \newcommand{\defeq}{\overset{\textrm{def}}{=}}
 	\newcommand{\defeq}{=}
 	\newcommand{\vect}[1]{\overrightharp{#1}}
+	\newcommand{\normsubg}{\mathrel{\unlhd}}
 
 	% To ease the usage of other math fonts
 
@@ -132,6 +149,7 @@
 	\newcommand{\ttt}[1]{\texttt{#1}}
 	\newcommand{\VOCAB}[1]{\textcolor{red}{\textbf{#1}}}
 	\newcommand{\HLINE}[1]{\begin{center}\line(1,0){#1}\end{center}}
+	\newcommand{\nhpad}{\hspace{-1em}} % stands for 'negative hints padding'
 
 %%fakesection Main Setup
 
@@ -148,6 +166,7 @@
 		\definecolor{Salmon}{rgb}{1.0, 0.55, 0.41}
 		\definecolor{RawSienna}{rgb}{0.53, 0.18, 0.09}
 		\definecolor{ForestGreen}{rgb}{0.0, 0.27, 0.13}
+		\definecolor{Beige}{rgb}{0.95, 0.95, 0.95}
 
 	%%fakesubsection Fancy Section/Chapter Headers
 
@@ -166,25 +185,26 @@
 
 	%%fakesubsection Defining Fancy Environments
 
-		\mdfdefinestyle{mdbluebox}{%
-			roundcorner = 10pt,
+		\mdfdefinestyle{mdboxa}{%
+			roundcorner = 4.5pt,
 			linewidth=1pt,
 			skipabove=12pt,
 			innerbottommargin=9pt,
 			skipbelow=2pt,
-			linecolor=blue,
+			linecolor=Beige!5!black,
 			nobreak=true,
-			backgroundcolor=TealBlue!5,
+			backgroundcolor=Beige,
 		}
 
 		\declaretheoremstyle[
-			headfont=\sffamily\bfseries\color{MidnightBlue},
-			mdframed={style=mdbluebox},
+			headfont=\large\sffamily\bfseries\color{black},
+			mdframed={style=mdboxa},
+			headformat=\S \gap \NAME \gap \NUMBER \NOTE,
 			headpunct={\\[3pt]},
 			postheadspace={0pt}
-		]{thmbluebox}
+		]{thmboxa}
 
-		\mdfdefinestyle{mdredbox}{%
+		\mdfdefinestyle{mdboxb}{%
 			linewidth=0.5pt,
 			skipabove=12pt,
 			frametitleaboveskip=5pt,
@@ -194,46 +214,43 @@
 			innertopmargin=4pt,
 			innerbottommargin=8pt,
 			nobreak=true,
-			backgroundcolor=Salmon!5,
-			linecolor=RawSienna,
+			backgroundcolor=Beige,
+			linecolor=black,
 		}
 
 		\declaretheoremstyle[
-			headfont=\bfseries\color{RawSienna},
-			mdframed={style=mdredbox},
+			headfont=\bfseries\color{black},
+			mdframed={style=mdboxb},
 			headpunct={\\[3pt]},
 			postheadspace={0pt},
-		]{thmredbox}
+		]{thmboxb}
 
-		\mdfdefinestyle{mdgreenbox}{%
+		\mdfdefinestyle{mdboxc}{%
 			skipabove=8pt,
-			linewidth=2pt,
-			rightline=false,
-			leftline=true,
-			topline=false,
-			bottomline=false,
-			linecolor=ForestGreen,
-			backgroundcolor=ForestGreen!5,
+			linewidth=0.4pt,
+			linecolor=black,
+			backgroundcolor=Beige
 		}
 
 		\declaretheoremstyle[
-			headfont=\bfseries\sffamily\color{ForestGreen!70!black},
+			headfont=\bfseries\sffamily\color{black},
 			bodyfont=\normalfont,
 			spaceabove=2pt,
 			spacebelow=1pt,
-			mdframed={style=mdgreenbox},
+			mdframed={style=mdboxc},
 			headpunct={ --- },
-		]{thmgreenbox}
+		]{thmboxc}
 
-		\mdfdefinestyle{mdblackbox}{%
+		\mdfdefinestyle{mdboxd}{%
 			skipabove=8pt,
 			linewidth=3pt,
-			rightline=false,
-			leftline=true,
-			topline=false,
+			linecolor=white,
+			topline=true,
 			bottomline=false,
-			linecolor=black,
-			backgroundcolor=black!5!gray!5,
+			leftline=false,
+			rightline=false,
+			backgroundcolor=Beige,
+			tikzsetting={draw=black, line width=2pt, dotted}
 		}
 
 		\declaretheoremstyle[
@@ -241,10 +258,10 @@
 			bodyfont=\normalfont\small,
 			spaceabove=0pt,
 			spacebelow=0pt,
-			mdframed={style=mdblackbox}
-		]{thmblackbox}
+			mdframed={style=mdboxd}
+		]{thmboxd}
 
-		\mdfdefinestyle{mdredredbox}{
+		\mdfdefinestyle{mdboxe}{
 			skipabove=12pt,
 			skipbelow=12pt,
 			linewidth=2pt,
@@ -261,9 +278,9 @@
 			bodyfont=\normalfont,
 			spaceabove=3pt,
 			spacebelow=3pt,
-			mdframed={style=mdredredbox},
+			mdframed={style=mdboxe},
 			headpunct={\\[3pt]}
-		]{thmredredbox}
+		]{thmboxe}
 
 	%%fakesubsection Defining Math Environments
 		
@@ -271,9 +288,9 @@
 
 		% Proof and solution environments
 
-			\newenvironment{solution}[1]{\vspace{-0.7cm}\paragraph{Solution#1:}}{\hfill$\square$ \medskip}
+			\newenvironment{solution}[1]{\paragraph{Solution#1:}}{\hfill$\square$ \medskip}
 
-			\renewenvironment{proof}[1]{\vspace{-0.7cm}\paragraph{Proof#1:}}{\hfill$\square$ \medskip}
+			\renewenvironment{proof}[1]{\paragraph{Proof#1:}}{\hfill$\square$ \medskip}
 
 		% Theorems, lemmas, claims, definitions, corollaries, propositions, problems, examples, remarks and exercises
 
@@ -287,58 +304,78 @@
 			
 			\ifarchitfancythrm
 				\ifarchitchapnum
-					\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=chapter,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
-					\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
+					\declaretheorem[style=thmboxa,name=Theorem,numberwithin=chapter,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
+					\declaretheorem[style=thmboxa,name=Theorem,numbered=no]{theorem*}
 				\else
-					\declaretheorem[style=thmbluebox,name=Theorem,numberwithin=section,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
-					\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
+					\declaretheorem[style=thmboxa,name=Theorem,numberwithin=section,refname={theorem,theorems},Refname={Theorem,Theorems}]{theorem}
+					\declaretheorem[style=thmboxa,name=Theorem,numbered=no]{theorem*}
 				\fi
 			\else
-				\newtheorem{theorem}[thrmcount]{Theorem}
 				\newtheorem*{theorem*}{Theorem}
+
+				\ifarchitchapnum
+					\newtheorem{theorem}{Theorem}[chapter]
+				\else
+					\newtheorem{theorem}{Theorem}[section]
+				\fi
 			\fi
 
 			\ifarchitfancylemma
-				\declaretheorem[style=thmbluebox,name=Lemma,sibling=theorem,refname={lemma,lemmas},Refname={Lemma,Lemmas}]{lemma}
-				\declaretheorem[style=thmbluebox,name=Lemma,numbered=no]{lemma*}
+				\declaretheorem[style=thmboxa,name=Lemma,sibling=theorem,refname={lemma,lemmas},Refname={Lemma,Lemmas}]{lemma}
+				\declaretheorem[style=thmboxa,name=Lemma,numbered=no]{lemma*}
 			\else
-				\newtheorem{lemma}[thrmcount]{Lemma}
+				\newtheorem{lemma}[theorem]{Lemma}
 				\newtheorem*{lemma*}{Lemma}
 			\fi
 
 			\ifarchitfancyprob
-				\declaretheorem[style=thmbluebox,name=Problem,sibling=theorem,refname={problem,problems},Refname={Problem,Problems}]{problem}
-				\declaretheorem[style=thmbluebox,name=Problem,numbered=no]{problem*}
+				\declaretheorem[style=thmboxa,name=Problem,numbered=no]{problem*}
+
+				\ifarchitthrmprbsepnum
+					\ifarchitchapnum
+						\declaretheorem[style=thmboxa,name=Problem,numberwithin=chapter,refname={problem,problems},Refname={Problem,Problems}]{problem}
+					\else
+						\declaretheorem[style=thmboxa,name=Problem,numberwithin=section,refname={problem,problems},Refname={Problem,Problems}]{problem}
+					\fi
+				\else
+					\declaretheorem[style=thmboxa,name=Problem,sibling=theorem,refname={problem,problems},Refname={Problem,Problems}]{problem}
+				\fi
 			\else
-				\theoremstyle{definition}
-				\newtheorem{problem}[thrmcount]{Problem}
 				\newtheorem*{problem*}{Problem}
+
+				\ifarchitthrmprbsepnum
+					\ifarchitchapnum
+						\newtheorem{problem}{Problem}[chapter]
+					\else
+						\newtheorem{problem}{Problem}[section]
+					\fi
+				\else
+					\newtheorem{problem}[theorem]{Problem}
+				\fi
 			\fi
-
-
+						
 			\ifarchitfancydef
-				\declaretheorem[style=thmredredbox,name=Definition,sibling=theorem]{definition}
-				\declaretheorem[style=thmredredbox,name=Definition,numbered=no]{definition*}
-
+				\declaretheorem[style=thmboxe,name=Definition,sibling=theorem]{definition}
+				\declaretheorem[style=thmboxe,name=Definition,numbered=no]{definition*}
 			\else
 				\theoremstyle{definition}
-				\newtheorem{definition}[thrmcount]{Definition}
+				\newtheorem{definition}[theorem]{Definition}
 				\newtheorem*{definition*}{Definition}
 			\fi
 
 			\ifarchitfancyclaim
-				\declaretheorem[style=thmgreenbox,name=Claim,sibling=theorem]{claim}
-				\declaretheorem[style=thmgreenbox,name=Claim,numbered=no]{claim*}
+				\declaretheorem[style=thmboxc,name=Claim,sibling=theorem]{claim}
+				\declaretheorem[style=thmboxc,name=Claim,numbered=no]{claim*}
 
 			\else
 				\theoremstyle{plain}
-				\newtheorem{claim}[thrmcount]{Claim}
+				\newtheorem{claim}[theorem]{Claim}
 				\newtheorem*{claim*}{Claim}
 			\fi
 
 			\ifarchitfancyex
-				\declaretheorem[style=thmredbox,name=Example,sibling=theorem,refname={example,examples},Refname={Example,Examples}]{example}
-				\declaretheorem[style=thmredbox,name=Example,numbered=no]{example*}
+				\declaretheorem[style=thmboxb,name=Example,sibling=theorem,refname={example,examples},Refname={Example,Examples}]{example}
+				\declaretheorem[style=thmboxb,name=Example,numbered=no]{example*}
 
 			\else
 				\newtheorem{example}[thrmcount]{Example}
@@ -346,33 +383,32 @@
 			\fi
 
 			\ifarchitfancycorollary
-				\declaretheorem[style=thmbluebox,name=Corollary,sibling=theorem,refname={corollary,corollaries},Refname={Corollary,Corollaries}]{corollary}
-				\declaretheorem[style=thmbluebox,name=Corollary,numbered=no]{corollary*}
-			
+				\declaretheorem[style=thmboxa,name=Corollary,sibling=theorem,refname={corollary,corollaries},Refname={Corollary,Corollaries}]{corollary}
+				\declaretheorem[style=thmboxa,name=Corollary,numbered=no]{corollary*}
 			\else
-				\newtheorem{corollary}[thrmcount]{Corollary}
+				\newtheorem{corollary}[theorem]{Corollary}
 				\newtheorem*{corollary*}{Corollary}
 			\fi
 
 			\ifarchitfancyprpstn
-				\declaretheorem[style=thmbluebox,name=Proposition,sibling=theorem,refname={proposition,propositions},Refname={Proposition,Propositions}]{proposition}
-				\declaretheorem[style=thmbluebox,name=Proposition,numbered=no]{proposition*}
+				\declaretheorem[style=thmboxa,name=Proposition,sibling=theorem,refname={proposition,propositions},Refname={Proposition,Propositions}]{proposition}
+				\declaretheorem[style=thmboxa,name=Proposition,numbered=no]{proposition*}
 			\else
-				\newtheorem{proposition}[thrmcount]{Proposition}
+				\newtheorem{proposition}[theorem]{Proposition}
 				\newtheorem*{proposition*}{Proposition}
 			\fi
 
 			\ifarchitfancyexer
-				\declaretheorem[style=thmblackbox,name=Exercise,sibling=theorem,refname={exercise,exercises},Refname={Exercise,Exercises}]{exercise}
+				\declaretheorem[style=thmboxd,name=Exercise,sibling=theorem,refname={exercise,exercises},Refname={Exercise,Exercises}]{exercise}
 			\else
-				\newtheorem{exercise}[thrmcount]{Exercise}
+				\newtheorem{exercise}[theorem]{Exercise}
 			\fi
 
 			\ifarchitfancyrmk
-				\declaretheorem[style=thmblackbox,name=Remark,sibling=theorem]{remark}
-				\declaretheorem[style=thmblackbox,name=Remark,numbered=no]{remark*}
+				\declaretheorem[style=thmboxd,name=Remark,sibling=theorem]{remark}
+				\declaretheorem[style=thmboxd,name=Remark,numbered=no]{remark*}
 			\else
-				\newtheorem{remark}[thrmcount]{Remark}
+				\newtheorem{remark}[theorem]{Remark}
 				\newtheorem*{remark*}{Remark}
 			\fi
 
